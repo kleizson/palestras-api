@@ -13,7 +13,7 @@ routes.post(
   palestrasController.store
 );
 routes.get("/palestras", palestrasController.index);
-routes.get("/palestras/:id");
+routes.get("/palestras/:id", palestrasController.show);
 routes.put("/palestras/:id");
 routes.delete("/palestras/:id");
 // Rotas para as Tracks

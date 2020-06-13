@@ -7,7 +7,7 @@ module.exports = {
    * @function store() Ela faz a logica da organização dos horários e armazena no banco de dados
    */
 
-  async store(req, res) {
+  store(req, res) {
     if (!req.file) {
       return res.status(400).json({
         error: {
@@ -147,24 +147,46 @@ module.exports = {
    */
 
   async index(req, res) {
-    const palestras = await palestraModel.find();
+    try {
+      const palestras = await palestraModel.find();
 
-    if (palestras.length === 0) {
-      return res.status(204).json({
-        message: "Você nao adicionou nenhum item!",
+      if (palestras.length === 0) {
+        return res.status(204).json({
+          message: "Você nao adicionou nenhum item!",
+        });
+      }
+      return res.status(200).json({
+        palestras,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: {
+          message: "Erro desconhecido",
+          error,
+        },
       });
     }
-
-    res.status(200).json({
-      palestras,
-    });
   },
 
   /**
    * @function show() Ela mostra uma palestra especifica de acordo com o id passado
    */
 
-  show(req, res) {},
+  async show(req, res) {
+    const { id } = req.params;
+
+    try {
+      const palestra = await palestraModel.findOne({ _id: id });
+
+      return res.status(200).json({
+        palestra,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: "Não foi encontrado nenhuma palestra com esse Id!",
+      });
+    }
+  },
 
   /**
    * @function update() Ela atualiza alguma informação de uma palestra no banco de dados
