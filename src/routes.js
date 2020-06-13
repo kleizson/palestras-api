@@ -15,10 +15,10 @@ routes.post(
 routes.get("/palestras", palestrasController.index);
 routes.get("/palestras/:id", palestrasController.show);
 routes.put("/palestras/:id", palestrasController.update);
-routes.delete("/palestras/:id");
+routes.delete("/palestras/:id", palestrasController.destroy);
 // Rotas para as Tracks
 routes.get("/tracks");
-routes.get("/tracks");
+routes.get("/tracks/:id");
 routes.delete("/tracks/:id");
 
 module.exports = routes;

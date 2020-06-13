@@ -4,10 +4,10 @@ const palestraModel = require("../models/palestra");
 
 module.exports = {
   /**
-   * @function store() Ela faz a logica da organização dos horários e armazena no banco de dados
+   * @function store()  Faz a logica da organização dos horários e armazena no banco de dados
    */
 
-  store(req, res) {
+  async store(req, res) {
     if (!req.file) {
       return res.status(400).json({
         error: {
@@ -54,7 +54,7 @@ module.exports = {
       let palestrasOrganizadas = [];
 
       //Estou percorrendo o Array com os objetos das palestras
-      //coloquei algumas condições e a cada volta, o horario é acrescentado pela duração da palestra
+      //coloquei algumas condições e a cada volta, o horario é acrescentado p duração da palestra
       palestrasOrdenadas.map((palestras) => {
         let duracaoPaletra =
           palestras.duracao === "lightning" ? 5 : palestras.duracao;
@@ -106,7 +106,6 @@ module.exports = {
 
     // Função para cadastrar no banco de dados as track e as suas palestras organizadas por numero
     async function cadastrandoTracksBancoDeDados(palestrasOrganizadas) {
-      console.log(palestrasOrganizadas[palestrasOrganizadas.length - 1].day);
       for (
         let contadorTrack = 1;
         contadorTrack <=
@@ -123,18 +122,13 @@ module.exports = {
       }
     }
 
-    function CadastrandoPalestrasBancoDeDados(palestrasOrganizadas) {
-      palestrasOrganizadas.forEach(async (palestras) => {
-        await palestraModel.create(palestras);
-      });
-    }
-
     const palestras = gerarHorario(
       ordenarPalestras(gerarObjetosPalestra(arquivoPalestras))
     );
 
     cadastrandoTracksBancoDeDados(palestras);
-    CadastrandoPalestrasBancoDeDados(palestras);
+
+    await palestraModel.create(...palestras);
 
     return res.status(201).json({
       message: "Upload feito com sucesso! Palestras cadastradas",
@@ -143,16 +137,15 @@ module.exports = {
   },
 
   /**
-   * @function index() Ela mostra todas as palestras do banco de dados
+   * @function index()  Retorna todas as palestras do banco de dados
    */
 
   async index(req, res) {
     try {
       const palestras = await palestraModel.find();
-
       if (palestras.length === 0) {
-        return res.status(204).json({
-          message: "Você nao adicionou nenhum item!",
+        return res.status(403).json({
+          message: "Você não adicionou nenhum item!",
         });
       }
       return res.status(200).json({
@@ -161,15 +154,14 @@ module.exports = {
     } catch (error) {
       return res.status(500).json({
         error: {
-          message: "Erro desconhecido",
-          error,
+          message: error,
         },
       });
     }
   },
 
   /**
-   * @function show() Ela mostra uma palestra especifica de acordo com o id passado
+   * @function show()  Retorna uma palestra especifica de acordo com o id passado
    */
 
   async show(req, res) {
@@ -182,14 +174,16 @@ module.exports = {
         palestra,
       });
     } catch (error) {
-      return res.status(400).json({
-        message: "Não foi encontrado nenhuma palestra com esse Id!",
+      return res.status(500).json({
+        error: {
+          message: error,
+        },
       });
     }
   },
 
   /**
-   * @function update() Ela atualiza alguma informação de uma palestra no banco de dados
+   * @function update()  Atualiza uma palestra no banco de dados
    */
 
   async update(req, res) {
@@ -212,17 +206,32 @@ module.exports = {
         palestra: palestraAtualizada,
       });
     } catch (error) {
-      return res.status(400).json({
+      return res.status(500).json({
         error: {
-          message: "Não foi encontrado nenhuma palestra com esse Id!",
+          message: error,
         },
       });
     }
   },
 
   /**
-   * @function destroy() Ela deleta uma palestra do banco de dados
+   * @function destroy()  Deleta uma palestra do banco de dados
    */
 
-  destroy(req, res) {},
+  async destroy(req, res) {
+    const { id } = req.params;
+
+    try {
+      await palestraModel.findByIdAndRemove(id);
+      return res.status(200).json({
+        message: "Palestra deletada com sucesso!",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: {
+          message: error,
+        },
+      });
+    }
+  },
 };
