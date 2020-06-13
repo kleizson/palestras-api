@@ -129,7 +129,7 @@ module.exports = {
       });
     }
 
-    let palestras = gerarHorario(
+    const palestras = gerarHorario(
       ordenarPalestras(gerarObjetosPalestra(arquivoPalestras))
     );
 
@@ -146,7 +146,19 @@ module.exports = {
    * @function index() Ela mostra todas as palestras do banco de dados
    */
 
-  async index(req, res) {},
+  async index(req, res) {
+    const palestras = await palestraModel.find();
+
+    if (palestras.length === 0) {
+      return res.status(204).json({
+        message: "Você nao adicionou nenhum item!",
+      });
+    }
+
+    res.status(200).json({
+      palestras,
+    });
+  },
 
   /**
    * @function show() Ela mostra uma palestra especifica de acordo com o id passado

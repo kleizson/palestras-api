@@ -12,7 +12,7 @@ routes.post(
   multer({ storage }).single("file"),
   palestrasController.store
 );
-routes.get("/palestras");
+routes.get("/palestras", palestrasController.index);
 routes.get("/palestras/:id");
 routes.put("/palestras/:id");
 routes.delete("/palestras/:id");
