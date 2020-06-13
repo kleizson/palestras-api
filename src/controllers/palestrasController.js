@@ -161,7 +161,7 @@ module.exports = {
   },
 
   /**
-   * @function show()  Retorna uma palestra especifica de acordo com o id passado
+   * @function show()  Retorna uma palestra específica de acordo com o id passado
    */
 
   async show(req, res) {
