@@ -14,7 +14,7 @@ routes.post(
 );
 routes.get("/palestras", palestrasController.index);
 routes.get("/palestras/:id", palestrasController.show);
-routes.put("/palestras/:id");
+routes.put("/palestras/:id", palestrasController.update);
 routes.delete("/palestras/:id");
 // Rotas para as Tracks
 routes.get("/tracks");

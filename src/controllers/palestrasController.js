@@ -176,7 +176,7 @@ module.exports = {
     const { id } = req.params;
 
     try {
-      const palestra = await palestraModel.findOne({ _id: id });
+      const palestra = await palestraModel.findById(id);
 
       return res.status(200).json({
         palestra,
@@ -192,7 +192,33 @@ module.exports = {
    * @function update() Ela atualiza alguma informação de uma palestra no banco de dados
    */
 
-  update(req, res) {},
+  async update(req, res) {
+    const { id } = req.params;
+
+    if (req.body.hora || req.body.duracao) {
+      return res.status(403).json({
+        error: {
+          message:
+            "Não é permitido editar os horários ou a duração das palestras!",
+        },
+      });
+    }
+
+    try {
+      await palestraModel.findByIdAndUpdate(id, req.body);
+      const palestraAtualizada = await palestraModel.findById(id);
+      return res.status(200).json({
+        message: "Palestra atualizada com sucesso!",
+        palestra: palestraAtualizada,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        error: {
+          message: "Não foi encontrado nenhuma palestra com esse Id!",
+        },
+      });
+    }
+  },
 
   /**
    * @function destroy() Ela deleta uma palestra do banco de dados
