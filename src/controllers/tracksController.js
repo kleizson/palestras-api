@@ -32,6 +32,16 @@ module.exports = {
   async show(req, res) {
     const { id } = req.params;
 
+    const track = await tracksModel.findById(id);
+
+    if (track === null) {
+      return res.status(403).json({
+        error: {
+          message: "Id da Track não existe!",
+        },
+      });
+    }
+
     try {
       const track = await tracksModel.findById(id);
 
@@ -53,6 +63,16 @@ module.exports = {
 
   async destroy(req, res) {
     const { id } = req.params;
+
+    const track = await tracksModel.findById(id);
+
+    if (track === null) {
+      return res.status(403).json({
+        error: {
+          message: "Id da Track não existe!",
+        },
+      });
+    }
 
     try {
       await tracksModel.findByIdAndRemove(id);

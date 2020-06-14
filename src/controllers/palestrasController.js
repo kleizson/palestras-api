@@ -11,7 +11,13 @@ module.exports = {
     if (!req.file) {
       return res.status(400).json({
         error: {
-          message: "Arquivo incorreto!",
+          message: "Arquivo não encontrado!",
+        },
+      });
+    } else if (req.file.mimetype !== "text/plain") {
+      return res.status(400).json({
+        error: {
+          message: "Arquivo em formato não aceito!",
         },
       });
     } else if (String(req.file.buffer) === "") {
@@ -26,7 +32,6 @@ module.exports = {
 
     // usei a biblioteca moment para trabalhar com as horas
     moment.locale("pt-br");
-    let horarioInicialPalestras = moment("09:00", "HH:mm");
 
     // Função que gera um novo array contendo um objeto com nome e duração das palestras
     function gerarObjetosPalestra(arquivoPalestras) {
@@ -52,6 +57,7 @@ module.exports = {
     function gerarHorario(palestrasOrdenadas) {
       let day = 0;
       let palestrasOrganizadas = [];
+      let horarioInicialPalestras = moment("09:00", "HH:mm");
 
       //Estou percorrendo o Array com os objetos das palestras
       //coloquei algumas condições e a cada volta, o horario é acrescentado p duração da palestra
@@ -122,18 +128,26 @@ module.exports = {
       }
     }
 
-    const palestras = gerarHorario(
-      ordenarPalestras(gerarObjetosPalestra(arquivoPalestras))
-    );
+    try {
+      const palestras = gerarHorario(
+        ordenarPalestras(gerarObjetosPalestra(arquivoPalestras))
+      );
 
-    cadastrandoTracksBancoDeDados(palestras);
+      cadastrandoTracksBancoDeDados(palestras);
 
-    await palestraModel.create(...palestras);
+      await palestraModel.create(...palestras);
 
-    return res.status(201).json({
-      message: "Upload feito com sucesso! Palestras cadastradas",
-      palestras: palestras,
-    });
+      return res.status(201).json({
+        message: "Upload feito com sucesso! Palestras cadastradas",
+        palestras: palestras,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: {
+          message: error,
+        },
+      });
+    }
   },
 
   /**
@@ -167,9 +181,18 @@ module.exports = {
   async show(req, res) {
     const { id } = req.params;
 
+    const palestra = await palestraModel.findById(id);
+
+    if (palestra === null) {
+      return res.status(403).json({
+        error: {
+          message: "Id de palestra não existe!",
+        },
+      });
+    }
+
     try {
       const palestra = await palestraModel.findById(id);
-
       return res.status(200).json({
         palestra,
       });
@@ -188,6 +211,25 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
+
+    const palestra = await palestraModel.findById(id);
+
+    if (palestra === null) {
+      return res.status(403).json({
+        error: {
+          message: "Id de palestra não existe!",
+        },
+      });
+    }
+
+    if (Object.entries(req.body).length === 0) {
+      return res.status(403).json({
+        error: {
+          message:
+            "Não foi alterado nenhuma palestra! nenhum paramentro para alterar foi passado!",
+        },
+      });
+    }
 
     if (req.body.hora || req.body.duracao) {
       return res.status(403).json({
@@ -220,6 +262,16 @@ module.exports = {
 
   async destroy(req, res) {
     const { id } = req.params;
+
+    const palestra = await palestraModel.findById(id);
+
+    if (palestra === null) {
+      return res.status(403).json({
+        error: {
+          message: "Id de palestra não existe!",
+        },
+      });
+    }
 
     try {
       await palestraModel.findByIdAndRemove(id);
