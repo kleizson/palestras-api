@@ -1,11 +1,21 @@
 const request = require("supertest");
-const mongoose = require("../../src/database/connection");
+const mongoose = require("../../src/database/connectionTeste");
 const tracksModel = require("../../src/models/tracks");
 
 const app = require("../../src/index");
 
 describe("Index do controller, teste de retorno de dados do banco", () => {
   it("Tem que retornar os dados das tracks no banco de dados", async () => {
+    // criando uma track fake para teste
+    const track = await tracksModel.create({
+      track: {
+        trackTeste: {
+          nome: "Testes automatizados",
+          duracao: "60",
+          hora: "18:30",
+        },
+      },
+    });
     const response = await request(app).get(`/tracks`);
 
     expect(response.status).toBe(200);
@@ -34,7 +44,7 @@ describe("Show do controller, teste de retorno de dados do banco", () => {
   it("Tem que retornar erro ao passar Id inexistente", async () => {
     const response = await request(app).get(`/tracks/5ee566d446f59f40304ea5fb`);
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
   });
 });
@@ -63,7 +73,7 @@ describe("destroy do controller, teste de retirar dados do banco", () => {
       `/tracks/5ee566d446f59f40304ea5fb`
     );
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
   });
 });

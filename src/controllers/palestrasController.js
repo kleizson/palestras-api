@@ -158,7 +158,7 @@ module.exports = {
     try {
       const palestras = await palestraModel.find();
       if (palestras.length === 0) {
-        return res.status(403).json({
+        return res.status(400).json({
           message: "Você não adicionou nenhum item!",
         });
       }
@@ -181,10 +181,16 @@ module.exports = {
   async show(req, res) {
     const { id } = req.params;
 
-    const palestra = await palestraModel.findById(id);
+    const palestra = await palestraModel.findById(id).catch((err) => {
+      return res.status(400).json({
+        error: {
+          message: "Id de palestra Invalido!",
+        },
+      });
+    });
 
     if (palestra === null) {
-      return res.status(403).json({
+      return res.status(400).json({
         error: {
           message: "Id de palestra não existe!",
         },
@@ -212,10 +218,16 @@ module.exports = {
   async update(req, res) {
     const { id } = req.params;
 
-    const palestra = await palestraModel.findById(id);
+    const palestra = await palestraModel.findById(id).catch((err) => {
+      return res.status(400).json({
+        error: {
+          message: "Id de palestra Invalido!",
+        },
+      });
+    });
 
     if (palestra === null) {
-      return res.status(403).json({
+      return res.status(400).json({
         error: {
           message: "Id de palestra não existe!",
         },
@@ -223,7 +235,7 @@ module.exports = {
     }
 
     if (Object.entries(req.body).length === 0) {
-      return res.status(403).json({
+      return res.status(400).json({
         error: {
           message:
             "Não foi alterado nenhuma palestra! nenhum paramentro para alterar foi passado!",
@@ -263,10 +275,16 @@ module.exports = {
   async destroy(req, res) {
     const { id } = req.params;
 
-    const palestra = await palestraModel.findById(id);
+    const palestra = await palestraModel.findById(id).catch((err) => {
+      return res.status(400).json({
+        error: {
+          message: "Id de palestra Invalido!",
+        },
+      });
+    });
 
     if (palestra === null) {
-      return res.status(403).json({
+      return res.status(400).json({
         error: {
           message: "Id de palestra não existe!",
         },

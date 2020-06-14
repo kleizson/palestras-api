@@ -1,5 +1,5 @@
 const request = require("supertest");
-const mongoose = require("../../src/database/connection");
+const mongoose = require("../../src/database/connectionTeste");
 const palestraModel = require("../../src/models/palestra");
 
 const app = require("../../src/index");
@@ -232,7 +232,7 @@ describe("Update do controller, teste de atualização de dados do banco", () =>
         nome: "Palestra de teste",
       });
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
   });
 
@@ -245,7 +245,7 @@ describe("Update do controller, teste de atualização de dados do banco", () =>
     });
     const response = await request(app).put(`/palestras/${palestra._id}`);
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
   });
 
@@ -254,7 +254,7 @@ describe("Update do controller, teste de atualização de dados do banco", () =>
       `/palestras/5ee566d446f59f40304ea5fb`
     );
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("error");
   });
 
