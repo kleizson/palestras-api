@@ -1,5 +1,8 @@
-# node modules
+#node modules
 /node_modules
 
 #Environment variables
 .env
+
+#files from coverage report
+/__tests__/coverage

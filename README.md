@@ -27,7 +27,7 @@ Para iniciar o desenvolvimento, é necessário clonar o projeto do GitHub num di
 
 ```shell
 cd "diretorio de sua preferencia"
-git clone https://github.com/kleizson/palestras-api
+git clone https://github.com/kleizson/palestras-api.git
 ```
 ### Construção
 
@@ -36,12 +36,12 @@ Para instalar todas as depedências necessárias, executar o comando abaixo:
 ```shell
 npm install
 ou
-yarn install
+yarn 
 ```
 ## Estrutura do projeto
 
 - \__test\__/  __*#pasta onde fica os testes*__
-	- coverage/
+	- coverage/ __*#esta pasta será criada após rodar os testes.*__
 	- filesTest/
 	- integration/
 		- palestraController.test.js
@@ -131,21 +131,26 @@ __GET__ ```http://localhost:3333/palestras```
 // GET http://localhost:3333/palestras
 
 {
-  "message": "Upload feito com sucesso! Palestras cadastradas",
   "palestras": [
     {
+      "_id": "5ef39fda1c251443982415fd",
       "nome": "Diminuindo tempo de execução de testes em aplicações Rails enterprise",
       "duracao": "60",
       "hora": "09:00",
-      "day": 1
+      "day": 1,
+      "createdAt": "2020-06-24T18:47:54.402Z",
+      "__v": 0
     },
     {
+      "_id": "5ef39fda1c251443982415fe",
       "nome": "Trabalho remoto: prós e cons",
       "duracao": "60",
       "hora": "10:00",
-      "day": 1
+      "day": 1,
+      "createdAt": "2020-06-24T18:47:54.403Z",
+      "__v": 0
     },
-    ....
+    ...
   ]
 }
 
