@@ -52,6 +52,9 @@ yarn
 		- tracksController.js
 	- database/
 		- connection.js
+  - helpers/
+    - gerarPalestras.js
+    - gerarTracks.js
 	- models/
 		- palestra.js
 		- tracks.js

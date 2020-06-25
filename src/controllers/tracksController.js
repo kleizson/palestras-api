@@ -49,10 +49,10 @@ module.exports = {
     }
 
     try {
-      const trackFiltrada = await tracksModel.findById(id);
+      const track = await tracksModel.findById(id);
 
       return res.status(200).json({
-        track: trackFiltrada.track,
+        track,
       });
     } catch (error) {
       return res.status(500).json({
