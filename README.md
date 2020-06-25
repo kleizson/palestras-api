@@ -58,9 +58,9 @@ yarn
 	- models/
 		- palestra.js
 		- tracks.js
-    - index.js
-    - routes.js
-    - server.js
+  - index.js
+  - routes.js
+  - server.js
 - .env.example __*#arquivo para preencher as variáveis de ambiente*__
 - jest.config.js
 ## Configuração
