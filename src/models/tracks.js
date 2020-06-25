@@ -2,7 +2,7 @@ const mongoose = require("../database/connection");
 
 const TracksSchema = new mongoose.Schema({
   track: {
-    type: Object,
+    type: [Object],
   },
 });
 
