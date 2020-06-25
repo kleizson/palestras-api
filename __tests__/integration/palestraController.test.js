@@ -1,5 +1,5 @@
 const request = require("supertest");
-const mongoose = require("../../src/database/connectionTeste");
+const mongoose = require("../../src/database/connection");
 const palestraModel = require("../../src/models/palestra");
 
 const app = require("../../src/index");
@@ -187,6 +187,12 @@ describe("Store do controller, testes de upload e logica da organização dos ho
 
 describe("Index do controller, teste de retorno de dados do banco", () => {
   it("Tem que retornar os dados das palestras no banco de dados", async () => {
+    const palestra = await palestraModel.create({
+      nome: "Testando Api com jest",
+      duracao: "60",
+      hora: "18:00",
+    });
+
     const response = await request(app).get("/palestras");
 
     expect(response.status).toBe(200);

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const mongoose = require("../../src/database/connectionTeste");
+const mongoose = require("../../src/database/connection");
 const tracksModel = require("../../src/models/tracks");
 
 const app = require("../../src/index");
